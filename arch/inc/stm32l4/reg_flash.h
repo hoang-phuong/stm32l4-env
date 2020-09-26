@@ -1,6 +1,6 @@
 /* * prolouge ************************************************************************************/
-#ifndef FLASH_REG_H
-#define FLASH_REG_H
+#ifndef REG_FLASH_H
+#define REG_FLASH_H
 
 /* * include *************************************************************************************/
 #include "types.h"
@@ -461,4 +461,4 @@ typedef struct
 #define FLASH_WRP2BR_WRP2B_END_BITPOS                   16UL
 #define FLASH_WRP2BR_WRP2B_END_BITLEN                   8UL
 
-#endif /* #ifndef FLASH_REG_H */
+#endif /* #ifndef REG_FLASH_H */
