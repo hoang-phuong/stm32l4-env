@@ -1,11 +1,10 @@
 /* * prolouge ************************************************************************************/
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef _STD_TYPES_H_
+#define _STD_TYPES_H_
 
 /* * defines *************************************************************************************/
 #define TRUE                1UL
 #define FALSE               0UL
-
 #define NULL_PTR            (void*)0
 
 /* * type definitions ****************************************************************************/
@@ -22,4 +21,4 @@ typedef uint32_t            bool_t;
 
 
 
-#endif /* #ifndef TYPES_H */
+#endif /* #ifndef _STD_TYPES_H_ */
