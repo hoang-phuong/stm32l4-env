@@ -18,7 +18,7 @@
 #define RCC_CR_HSION_POS                8UL
 #define RCC_CR_HSION_LEN                1UL
 #define RCC_CR_HSIKERON_POS             9UL
-#define RCC_CR_HSIKERON_POS             1UL
+#define RCC_CR_HSIKERON_LEN             1UL
 #define RCC_CR_HSIRDY_POS               10UL
 #define RCC_CR_HSIRDY_LEN               1UL
 #define RCC_CR_HSIASFS_POS              11UL
@@ -660,7 +660,7 @@
 #define RCC_BDCR_LSEBYP_POS             2UL
 #define RCC_BDCR_LSEBYP_LEN             1UL
 #define RCC_BDCR_LSEDRV_POS             3UL
-#define RCC_BDCR_LSEDRV_POS             2UL
+#define RCC_BDCR_LSEDRV_LEN             2UL
 #define RCC_BDCR_LSECSSON_POS           5UL
 #define RCC_BDCR_LSECSSON_LEN           1UL
 #define RCC_BDCR_LSECSSD_POS            6UL
