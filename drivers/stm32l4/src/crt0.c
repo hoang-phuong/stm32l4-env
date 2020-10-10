@@ -8,8 +8,8 @@ extern void* vectorTable[];
 extern int main(void);
 
 static void Default_Handler(void);
-__STATIC_FORCEINLINE void CopyData(uint32_t *src, uint32_t *dst, uint32_t len);
-__STATIC_FORCEINLINE void ClearData(uint32_t *dst, uint32_t len);
+void CopyData(uint32_t *src, uint32_t *dst, uint32_t len);
+void ClearData(uint32_t *dst, uint32_t len);
 
 __NO_RETURN void Reset_Handler(void)
 {
@@ -250,25 +250,23 @@ static void Default_Handler(void)
     while(TRUE);
 }
 
-__STATIC_FORCEINLINE void CopyData(uint32_t *src, uint32_t *dst, uint32_t len)
+void CopyData(uint32_t *src, uint32_t *dst, uint32_t len)
 {
-    uint32_t numWords = len >> 2;
-    while(numWords > 0)
+    while(len > 0)
     {
         *dst = *src;
         src++;
         dst++;
-        numWords--;
+        len--;
     }
 }
 
-__STATIC_FORCEINLINE void ClearData(uint32_t *dst, uint32_t len)
+void ClearData(uint32_t *dst, uint32_t len)
 {
-    uint32_t numWords = len >> 2;
-    while (numWords > 0)
+    while (len > 0)
     {
         *dst = 0UL;
         dst++;
-        numWords--;
+        len--;
     }
 }

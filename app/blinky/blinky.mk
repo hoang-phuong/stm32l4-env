@@ -23,7 +23,7 @@ $(APP_HEX): $(APP_ELF)
 	@$(OBJCOPY) -O ihex $(APP_ELF) $(APP_HEX)
 	@echo ">>> Created $@"
 
-$(APP_ELF): $(DRIVERS_AR) $(APP_OBJ) $(COMMON_OBJ)
+$(APP_ELF): $(APP_OBJ) $(COMMON_OBJ) $(DRIVERS_AR)
 	@echo $(APP_SRC_DIR)
 	@echo "--------------------------------------------------------------------------------"
 	@echo ">>> Linking objects and libraries..."

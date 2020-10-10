@@ -1,10 +1,19 @@
 #include "Std_Types.h"
-#include "ARMCM4.h"
+#include "bsp.h"
 
-uint32_t myData = 0x12345678;
+uint32 myData = 0x12345678;
 
 int main(void)
 {
+    (void)BSP_Init();
+    uint32 i;
+    BSP_TurnOnLED(LED_GREEN);
+    BSP_TurnOffLED(LED_RED);
+    while(1){
+        for (i = 0; i < 1000000; i++){}
+        BSP_ToggleLED(LED_GREEN);
+        BSP_ToggleLED(LED_RED);
+    }
     myData++;
     return 0;
 }
