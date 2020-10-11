@@ -153,8 +153,13 @@ void BSP_Delay_ms(uint32 delay)
 
 void SysTick_Handler(void)
 {
+    static uint8 counter = 0;
+
     usTicks += 10;
-    if(0 == (usTicks % 1000)){
+
+    counter++;
+    counter = counter % 100;
+    if(0 == counter){
         msTicks++;
     }
 }
