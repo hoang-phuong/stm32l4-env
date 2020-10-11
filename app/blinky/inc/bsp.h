@@ -10,6 +10,15 @@ typedef enum
     LED_GREEN
 } LED_ten;
 
+typedef enum
+{
+    JOY_CENTER,
+    JOY_LEFT,
+    JOY_RIGHT,
+    JOY_UP,
+    JOY_DOWN
+} Button_ten;
+
 ErrorCodeT BSP_Init(void);
 uint32 BSP_GetSystemClock(void);
 void BSP_GetCurrentTime_us(uint32 * currentTime);

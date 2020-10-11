@@ -3,7 +3,7 @@
 #include "gpio.h"
 #include "ARMCM4.h"
 
-
+/* Macros for clock configuration */
 #define SYSCLK                  80000000UL
 #define HCLK                    SYSCLK/2
 #define PCLK                    HCLK
@@ -18,21 +18,27 @@
 #define PLLQ_8                  (3UL  << RCC_PLLCFGR_PLLQ_POS)
 #define PLLP_17                 (1UL  << RCC_PLLCFGR_PLLP_POS)
 #define PLLSRC_HSI16            (2UL  << RCC_PLLCFGR_PLLSRC_POS)
-#define SW_HSI16                (1UL  << RCC_CFGR_SW_POS)
-#define SWS_HSI16               (1UL  << RCC_CFGR_SWS_POS)
 #define SW_PLL                  (3UL  << RCC_CFGR_SW_POS)
 #define SWS_PLL                 (3UL  << RCC_CFGR_SWS_POS)
 #define AHB_PRESCALER           (8UL  << RCC_CFGR_HPRE_POS)
 #define APB1_PRESCALER          (0UL  << RCC_CFGR_PPRE1_POS)
 #define APB2_PRESCALER          (0UL  << RCC_CFGR_PPRE2_POS)
 #define TIMEOUT_COUNTER_VALUE   1000UL
-
 #define SYSTICK_IRQ_FREQ        100000
 
+/* Macros for LEDs */
 #define LED_RED_PORT            GPIO_PORT_B
 #define LED_RED_PIN             GPIO_PIN_2
 #define LED_GREEN_PORT          GPIO_PORT_E
 #define LED_GREEN_PIN           GPIO_PIN_8
+
+/* Macros for Joystick */
+#define JOYSTICK_PORT           GPIO_PORT_A
+#define JOY_CENTER_PIN          GPIO_PIN_0
+#define JOY_LEFT_PIN            GPIO_PIN_1
+#define JOY_RIGHT_PIN           GPIO_PIN_2
+#define JOY_UP_PIN              GPIO_PIN_3
+#define JOY_DOWN_PIN            GPIO_PIN_5
 
 /** Flag indicate whether clock is configured to 80MHz */
 static uint32 systemClockFreq = STARTUP_SYSLOCK_SPEED;
@@ -43,6 +49,7 @@ static uint32 msTicks = 0;
 static void ConfigureSystemClock(void);
 static void ConfigureSystemTimer(void);
 static void ConfigureLED(void);
+static void ConfigureJoystick(void);
 
 
 ErrorCodeT BSP_Init(void)
@@ -178,23 +185,39 @@ static void ConfigureSystemClock(void)
     systemClockFreq = SYSCLK;
 }
 
+static void ConfigureSystemTimer(void)
+{
+    SysTick_Config(HCLK/SYSTICK_IRQ_FREQ);
+}
 
 static void ConfigureLED(void)
 {
     GPIO_Config_tst gpioConfig;
     gpioConfig.mode = GPIO_MODE_OUTPUT;
-    gpioConfig.type = GPIO_OTYPE_PUSH_PULL;
-    gpioConfig.speed = GPIO_OSPEED_HIGH;
+    gpioConfig.outputType = GPIO_OTYPE_PUSH_PULL;
+    gpioConfig.outputSpeed = GPIO_OSPEED_HIGH;
     gpioConfig.pupd = GPIO_PUPD_NO_PULL;
 
-    GPIO_EnableClock(LED_GREEN_PORT);
+    GPIO_Enable(LED_GREEN_PORT);
     GPIO_ConfigurePin(LED_GREEN_PORT, LED_GREEN_PIN, &gpioConfig);
 
-    GPIO_EnableClock(LED_RED_PORT);
+    GPIO_Enable(LED_RED_PORT);
     GPIO_ConfigurePin(LED_RED_PORT, LED_RED_PIN, &gpioConfig);
 }
 
-static void ConfigureSystemTimer(void)
+static void ConfigureJoystick(void)
 {
-    SysTick_Config(HCLK/SYSTICK_IRQ_FREQ);
+    GPIO_Config_tst gpioConfig;
+    gpioConfig.mode = GPIO_MODE_INPUT;
+    gpioConfig.outputType = GPIO_OTYPE_PUSH_PULL;
+    gpioConfig.outputSpeed = GPIO_OSPEED_HIGH;
+    gpioConfig.pupd = GPIO_PUPD_PULL_DOWN;
+
+    GPIO_Enable(JOYSTICK_PORT);
+    GPIO_ConfigurePin(JOYSTICK_PORT, JOY_CENTER_PIN, &gpioConfig);
+    GPIO_ConfigurePin(JOYSTICK_PORT, JOY_LEFT_PIN, &gpioConfig);
+    GPIO_ConfigurePin(JOYSTICK_PORT, JOY_RIGHT_PIN, &gpioConfig);
+    GPIO_ConfigurePin(JOYSTICK_PORT, JOY_UP_PIN, &gpioConfig);
+    GPIO_ConfigurePin(JOYSTICK_PORT, JOY_DOWN_PIN, &gpioConfig);
+
 }

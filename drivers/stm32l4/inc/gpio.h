@@ -1,6 +1,11 @@
 #ifndef _GPIO_H_
 #define _GPIO_H_
+
+#include "ARMCM4.h"
 #include "Std_Types.h"
+#include "reg_rcc.h"
+
+#define GPIO_PIN_MASK(_pin)     (1UL << (_pin))
 
 typedef struct GPIO_RegTag
 {
@@ -113,29 +118,75 @@ typedef enum GPIO_AnalogSwitchTag
 {
     GPIO_ANALOG_SWITCH_DISCONNECT,
     GPIO_ANALOG_SWITCH_CONNECT,
+    GPIO_ANALOG_SWITCH_RESERVED = 0xFFFFFFFFUL
 } GPIO_AnalogSwitch_ten;
 
 typedef struct GPIO_ConfigTag
 {
     GPIO_Mode_ten           mode;
-    GPIO_OType_ten          type;
-    GPIO_OSpeed_ten         speed;
+    GPIO_OType_ten          outputType;
+    GPIO_OSpeed_ten         outputSpeed;
     GPIO_PuPd_ten           pupd;
-    GPIO_AltFunction_ten    altFn;
+    GPIO_AltFunction_ten    altFunction;
+    GPIO_AnalogSwitch_ten   analogSwitch;
 } GPIO_Config_tst;
 
-void GPIO_EnableClock(GPIO_Port_ten port);
+
+extern volatile GPIO_Reg_tst * GPIO_Ports[];
+
 
 void GPIO_ConfigurePin(GPIO_Port_ten    port,
                        GPIO_Pin_ten     pin,
                        GPIO_Config_tst * pConfig);
 
-void GPIO_SetPin(GPIO_Port_ten    port,
-                 GPIO_Pin_ten     pin);
 
-void GPIO_ResetPin(GPIO_Port_ten    port,
-                   GPIO_Pin_ten     pin);
 
-void GPIO_TogglePin(GPIO_Port_ten    port,
-                    GPIO_Pin_ten     pin);
+__STATIC_FORCEINLINE void GPIO_SetPin(GPIO_Port_ten     port,
+                                      GPIO_Pin_ten      pin)
+{
+    (GPIO_Ports[port])->BSRR |= GPIO_PIN_MASK(pin);
+}
+
+__STATIC_FORCEINLINE void GPIO_ResetPin(GPIO_Port_ten   port,
+                                        GPIO_Pin_ten    pin)
+{
+    (GPIO_Ports[port])->BSRR |= GPIO_PIN_MASK(pin + 16UL);
+}
+
+__STATIC_FORCEINLINE void GPIO_TogglePin(GPIO_Port_ten  port,
+                                         GPIO_Pin_ten   pin)
+{
+    (GPIO_Ports[port])->ODR ^= GPIO_PIN_MASK(pin);
+}
+
+
+__STATIC_FORCEINLINE void GPIO_WritePin(GPIO_Port_ten   port,
+                                        GPIO_Pin_ten    pin,
+                                        uint32          value)
+{
+    (GPIO_Ports[port])->ODR = ((GPIO_Ports[port])->ODR & ~GPIO_PIN_MASK(pin)) | ((value & 1UL) << pin);
+}
+
+__STATIC_FORCEINLINE void GPIO_WritePort(GPIO_Port_ten  port,
+                                         uint32         value)
+{
+    (GPIO_Ports[port])->ODR = value;
+}
+
+__STATIC_FORCEINLINE uint32 GPIO_ReadPort(GPIO_Port_ten port)
+{
+    return (GPIO_Ports[port])->IDR;
+}
+
+__STATIC_FORCEINLINE uint32 GPIO_ReadPin(GPIO_Port_ten  port,
+                                         GPIO_Pin_ten   pin)
+{
+    return ((GPIO_Ports[port])->IDR & GPIO_PIN_MASK(pin)) >> pin;
+}
+
+__STATIC_FORCEINLINE void GPIO_Enable(GPIO_Port_ten port)
+{
+    RCC_AHB2ENR |= 1UL << port;
+}
+
 #endif /* #ifndef _GPIO_H_ */
