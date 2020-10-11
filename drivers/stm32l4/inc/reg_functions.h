@@ -1,7 +1,9 @@
 #ifndef _REG_FUNCTIONS_H_
 #define _REG_FUNCTIONS_H_
 
-#define REGISTER(_address)                      (*(volatile uint32_t*)(_address))
+#include "Std_Types.h"
+
+#define REGISTER(_address)                      (*(volatile uint32*)(_address))
 #define BITMASK(_pos, _len)                     (((1UL << _len) - 1UL) << _pos)
 #define GET_BITFIELD_POS(field)                 field##_POS
 #define GET_BITFIELD_LEN(field)                 field##_LEN

@@ -10,7 +10,7 @@ int main(void)
     BSP_TurnOnLED(LED_GREEN);
     BSP_TurnOffLED(LED_RED);
     while(1){
-        for (i = 0; i < 1000000; i++){}
+        BSP_Delay_ms(1000);
         BSP_ToggleLED(LED_GREEN);
         BSP_ToggleLED(LED_RED);
     }
